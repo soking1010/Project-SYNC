@@ -738,54 +738,58 @@
     .fade-in-delay-3 { transition-delay: 0.3s; }
     .fade-in-delay-4 { transition-delay: 0.4s; }
 
-    /* ===== NAVIGATION DOTS ===== */
+    /* ===== MICRO TOC (Right Sidebar) ===== */
     .nav-dots {
       position: fixed;
-      right: 24px;
+      right: 20px;
       top: 50%;
       transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 2px;
       z-index: 100;
     }
 
     .nav-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      border: 2px solid var(--text-dim);
-      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       cursor: pointer;
+      padding: 4px 0;
       transition: all 0.3s;
       position: relative;
+      flex-direction: row-reverse;
     }
 
-    .nav-dot:hover, .nav-dot.active {
+    .nav-dot::after {
+      content: '';
+      width: 7px;
+      height: 7px;
+      min-width: 7px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-dim);
+      background: transparent;
+      transition: all 0.3s;
+    }
+
+    .nav-dot:hover::after, .nav-dot.active::after {
       border-color: var(--primary);
       background: var(--primary);
-      box-shadow: 0 0 8px rgba(0,87,255,0.3);
+      box-shadow: 0 0 6px rgba(0,87,255,0.25);
     }
 
     .nav-dot .dot-label {
-      position: absolute;
-      right: 18px;
-      top: 50%;
-      transform: translateY(-50%);
       white-space: nowrap;
-      font-size: 0.65rem;
-      color: var(--text-secondary);
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      background: var(--bg-card);
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      transition: all 0.3s;
       font-weight: 600;
+      letter-spacing: 0.04em;
+      text-align: right;
     }
-    .nav-dot:hover .dot-label { opacity: 1; }
+
+    .nav-dot:hover .dot-label { color: var(--text-secondary); }
+    .nav-dot.active .dot-label { color: var(--primary); font-weight: 700; }
 
     /* ===== SITE HEADER & TABS ===== */
     .site-header {
@@ -1175,7 +1179,7 @@
   <!-- Site Header -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <div class="header-brand">Project SYNC<span>by Soking</span></div>
+      <div class="header-brand">Project SYNC<span>by Soking feat. 黃仁穩醫師</span></div>
       <div class="header-tabs">
         <div class="header-tab active" data-page="overview">計畫總覽</div>
         <div class="header-tab" data-page="tokenomics">代幣經濟學</div>
@@ -1184,23 +1188,11 @@
     </div>
   </header>
 
+  <!-- Micro TOC (dynamic per page) -->
+  <nav class="nav-dots" id="navDots"></nav>
+
   <!-- ========== PAGE: OVERVIEW ========== -->
   <div class="page-container active" id="page-overview">
-
-  <!-- Navigation Dots -->
-  <nav class="nav-dots" id="navDots">
-    <div class="nav-dot active" data-target="hero"><span class="dot-label">HOME</span></div>
-    <div class="nav-dot" data-target="gap"><span class="dot-label">THE GAP</span></div>
-    <div class="nav-dot" data-target="vision"><span class="dot-label">VISION</span></div>
-    <div class="nav-dot" data-target="ecosystem"><span class="dot-label">ECOSYSTEM</span></div>
-    <div class="nav-dot" data-target="behavioral-rx"><span class="dot-label">BEHAVIORAL Rx</span></div>
-    <div class="nav-dot" data-target="social-rx"><span class="dot-label">SOCIAL Rx</span></div>
-    <div class="nav-dot" data-target="vitality"><span class="dot-label">PARTNERS</span></div>
-    <div class="nav-dot" data-target="tokens"><span class="dot-label">TOKEN</span></div>
-    <div class="nav-dot" data-target="timeline"><span class="dot-label">ROADMAP</span></div>
-    <div class="nav-dot" data-target="why-now"><span class="dot-label">WHY NOW</span></div>
-    <div class="nav-dot" data-target="cta"><span class="dot-label">JOIN US</span></div>
-  </nav>
 
   <!-- Tooltip for ecosystem -->
   <div class="node-tooltip" id="nodeTooltip">
@@ -2604,28 +2596,79 @@ Lv.5 典範者   12,000 任務策劃權</div>
       });
     }
 
-    // ===== NAV DOTS =====
-    function initNavDots() {
-      const dots = document.querySelectorAll('.nav-dot');
-      const sections = Array.from(dots).map(dot => document.getElementById(dot.dataset.target));
+    // ===== MICRO TOC =====
+    const tocConfig = {
+      overview: [
+        { target: 'hero', label: 'HOME' },
+        { target: 'gap', label: 'THE GAP' },
+        { target: 'vision', label: 'VISION' },
+        { target: 'ecosystem', label: 'ECOSYSTEM' },
+        { target: 'behavioral-rx', label: 'BEHAVIORAL Rx' },
+        { target: 'social-rx', label: 'SOCIAL Rx' },
+        { target: 'vitality', label: 'PARTNERS' },
+        { target: 'tokens', label: 'TOKEN' },
+        { target: 'timeline', label: 'ROADMAP' },
+        { target: 'why-now', label: 'WHY NOW' },
+        { target: 'cta', label: 'JOIN US' }
+      ],
+      tokenomics: [
+        { target: 'token-hero', label: 'TOP' },
+        { target: 'token-dual', label: '雙幣架構' },
+        { target: 'token-hexp', label: 'hEXP' },
+        { target: 'token-hmile', label: 'hMile' },
+        { target: 'token-cycle', label: '經濟飛輪' },
+        { target: 'token-simulation', label: '模擬情境' }
+      ],
+      partners: [
+        { target: 'partner-hero', label: 'TOP' },
+        { target: 'partner-what', label: '經濟角色' },
+        { target: 'partner-tiers', label: '分級制度' },
+        { target: 'partner-spread', label: '行為價差' },
+        { target: 'partner-npo', label: 'NPO' },
+        { target: 'partner-cta', label: '加入' }
+      ]
+    };
 
-      dots.forEach(dot => {
+    let tocObserver = null;
+
+    function buildMicroToc(pageName) {
+      const nav = document.getElementById('navDots');
+      const items = tocConfig[pageName] || [];
+      nav.innerHTML = items.map((item, i) =>
+        `<div class="nav-dot${i === 0 ? ' active' : ''}" data-target="${item.target}"><span class="dot-label">${item.label}</span></div>`
+      ).join('');
+
+      // Bind clicks
+      nav.querySelectorAll('.nav-dot').forEach(dot => {
         dot.addEventListener('click', () => {
-          const target = document.getElementById(dot.dataset.target);
-          if (target) target.scrollIntoView({ behavior: 'smooth' });
+          const el = document.getElementById(dot.dataset.target);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
         });
       });
 
-      const observer = new IntersectionObserver((entries) => {
+      // Observe sections for active state
+      if (tocObserver) tocObserver.disconnect();
+      tocObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const id = entry.target.id;
-            dots.forEach(d => d.classList.toggle('active', d.dataset.target === id));
+            nav.querySelectorAll('.nav-dot').forEach(d =>
+              d.classList.toggle('active', d.dataset.target === id)
+            );
           }
         });
       }, { threshold: 0.3 });
 
-      sections.forEach(section => { if (section) observer.observe(section); });
+      items.forEach(item => {
+        const el = document.getElementById(item.target);
+        if (el) tocObserver.observe(el);
+      });
+
+      nav.style.display = '';
+    }
+
+    function initNavDots() {
+      buildMicroToc('overview');
     }
 
     // ===== TAB SWITCHING =====
@@ -2643,9 +2686,8 @@ Lv.5 典範者   12,000 任務策劃權</div>
       // Scroll to top
       window.scrollTo(0, 0);
 
-      // Show/hide nav dots (only on overview)
-      const navDots = document.getElementById('navDots');
-      if (navDots) navDots.style.display = pageName === 'overview' ? '' : 'none';
+      // Rebuild micro TOC for this page
+      buildMicroToc(pageName);
 
       // Re-init scroll animations for new page
       setTimeout(initScrollAnimations, 100);
