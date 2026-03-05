@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- SEO Meta Tags -->
+  <title>Project SYNC — AI 驅動全人健康守護計畫 | Soking</title>
+  <meta name="description" content="運用 AI 與行為設計，構建健康行為生態系的全人健康數位基礎建設。結合醫療、社區、商業的創新健康經濟模型。">
+  <meta name="keywords" content="AI 醫療, 行為處方, 社會處方箋, 健康經濟, 數位轉型, 預防醫學, Project SYNC">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://soking.cc/project-sync-visualization.html">
+  <meta property="og:title" content="Project SYNC — AI 驅動全人健康守護計畫">
+  <meta property="og:description" content="整合醫療、社區、商業的全人健康數位基礎建設。透過行為處方箋與社會處方箋，讓健康行為成為日常。">
+  <meta property="og:site_name" content="Soking">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Project SYNC — AI 驅動全人健康守護計畫">
+  <meta name="twitter:description" content="整合醫療、社區、商業的全人健康數位基礎建設。">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Project SYNC — AI 驅動全人健康守護計畫",
+    "description": "運用 AI 與行為設計，構建健康行為生態系的全人健康數位基礎建設",
+    "url": "https://soking.cc/project-sync-visualization.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Soking",
+      "url": "https://soking.cc"
+    }
+  }
+  </script>
+
+  <!-- D3.js -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-white: #ffffff;
+      --bg-light: #f5f7fb;
+      --bg-soft: #eef2f9;
+      --bg-card: #ffffff;
+      --primary: #0057ff;
+      --primary-soft: #4a8aff;
+      --primary-bg: rgba(0, 87, 255, 0.06);
+      --teal: #00b4a0;
+      --teal-bg: rgba(0, 180, 160, 0.08);
+      --coral: #ff5c72;
+      --coral-bg: rgba(255, 92, 114, 0.08);
+      --amber: #ff9f1c;
+      --amber-bg: rgba(255, 159, 28, 0.08);
+      --violet: #7c5cfc;
+      --violet-bg: rgba(124, 92, 252, 0.08);
+      --text-primary: #1a1a2e;
+      --text-secondary: #5a607a;
+      --text-dim: #9ca3b8;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 87, 255, 0.2);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+      --shadow-glow: 0 4px 30px rgba(0,87,255,0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
+      background: var(--bg-white);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== FULL-VIEWPORT SECTIONS ===== */
+    .section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 40px;
+      position: relative;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Alternating background */
+    .section-alt { background: var(--bg-light); }
+
+    /* ===== TYPOGRAPHY ===== */
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .section-subtitle {
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      color: var(--text-secondary);
+      line-height: 1.85;
+      max-width: 700px;
+    }
+
+    .accent-primary { color: var(--primary); }
+    .accent-teal { color: var(--teal); }
+    .accent-coral { color: var(--coral); }
+    .accent-amber { color: var(--amber); }
+    .accent-violet { color: var(--violet); }
+
+    /* ===== HERO SECTION ===== */
+    #hero {
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 30%, rgba(0,87,255,0.04), transparent),
+        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(0,180,160,0.03), transparent),
+        var(--bg-white);
+      text-align: center;
+      padding-top: 140px;
+    }
+
+    #hero .hero-title span { display: block; }
+
+    .hero-tagline {
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.9;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 0.45rem 1.25rem;
+      border: 1.5px solid var(--primary);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--primary);
+      letter-spacing: 0.08em;
+      margin-bottom: 2.5rem;
+      font-weight: 600;
+      background: var(--primary-bg);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+    }
+    .scroll-indicator .arrow {
+      width: 18px; height: 18px;
+      border-right: 2px solid var(--primary);
+      border-bottom: 2px solid var(--primary);
+      transform: rotate(45deg);
+      animation: bounceDown 2s ease infinite;
+      opacity: 0.5;
+    }
+    @keyframes bounceDown {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50% { transform: rotate(45deg) translateY(8px); }
+    }
+
+    /* ===== STAT CARDS ===== */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-4px);
+    }
+
+    .stat-number {
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ===== NARRATIVE TEXT ===== */
+    .narrative-text {
+      font-size: clamp(1rem, 1.6vw, 1.1rem);
+      color: var(--text-secondary);
+      line-height: 2;
+      margin-top: 2rem;
+      max-width: 760px;
+    }
+
+    .narrative-text strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ===== QUOTE BLOCK ===== */
+    .quote-block {
+      border-left: 3px solid var(--primary);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      background: var(--primary-bg);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.85;
+      font-style: italic;
+    }
+
+    /* ===== DIVIDER ===== */
+    .section-divider {
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--teal));
+      margin: 1.2rem 0;
+      border-radius: 3px;
+    }
+    .section-divider.center { margin-left: auto; margin-right: auto; }
+
+    /* ===== VISION PILLARS ===== */
+    .vision-pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--teal));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-glow);
+    }
+    .pillar-card:hover::before { opacity: 1; }
+
+    .pillar-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .pillar-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .pillar-card p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.75; }
+
+    /* ===== ECOSYSTEM SECTION ===== */
+    #ecosystem { min-height: 100vh; padding: 80px 40px; }
+
+    .ecosystem-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    #ecosystem-graph {
+      width: 100%;
+      max-width: 900px;
+      aspect-ratio: 16/10;
+      position: relative;
+      background: var(--bg-light);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    #ecosystem-graph svg { width: 100%; height: 100%; }
+
+    .ecosystem-legend {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* Node tooltip */
+    .node-tooltip {
+      position: fixed;
+      background: rgba(255, 255, 255, 0.97);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      max-width: 320px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-lg);
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.25s ease;
+    }
+    .node-tooltip.visible { opacity: 1; transform: translateY(0); }
+    .node-tooltip h4 { font-size: 1.05rem; margin-bottom: 0.4rem; font-weight: 700; }
+    .node-tooltip p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; }
+    .node-tooltip .tooltip-flows {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+    }
+    .node-tooltip .tooltip-flows span {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin: 2px 4px 2px 0;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    /* ===== PRESCRIPTION SECTIONS ===== */
+    .rx-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
+      margin-top: 2.5rem;
+    }
+
+    .rx-steps {
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .rx-steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 1rem 0 1rem 3.5rem;
+      border-left: 2px solid var(--border);
+      margin-left: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      transition: all 0.3s;
+    }
+
+    .rx-steps li:hover {
+      color: var(--text-primary);
+      border-left-color: var(--primary);
+    }
+
+    .rx-steps li::before {
+      content: counter(step, decimal-leading-zero);
+      position: absolute;
+      left: -1rem;
+      top: 1rem;
+      width: 2rem;
+      height: 2rem;
+      background: var(--bg-white);
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .rx-steps li strong {
+      color: var(--text-primary);
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 0.2rem;
+      font-weight: 600;
+    }
+
+    .rx-visual {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rx-visual-content { position: relative; z-index: 2; }
+    .rx-emoji { font-size: 3.5rem; margin-bottom: 1rem; }
+    .rx-visual h4 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .rx-visual p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.75; }
+
+    /* ===== VITALITY PARTNERS ===== */
+    .vitality-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+
+    .vitality-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .vitality-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .vitality-card .card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .vitality-card h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .vitality-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; }
+
+    /* ===== DUAL TOKEN ===== */
+    .token-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .token-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .token-card.hexp { border: 1.5px solid rgba(0,180,160,0.25); }
+    .token-card.hmile { border: 1.5px solid rgba(124,92,252,0.25); }
+
+    .token-card:hover { transform: translateY(-4px); }
+    .token-card.hexp:hover { box-shadow: 0 8px 30px rgba(0,180,160,0.12); }
+    .token-card.hmile:hover { box-shadow: 0 8px 30px rgba(124,92,252,0.12); }
+
+    .token-name { font-size: 2rem; font-weight: 900; margin-bottom: 0.3rem; letter-spacing: -0.02em; }
+    .token-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+    .token-features { list-style: none; }
+    .token-features li {
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .token-features li::before { content: '>'; font-weight: 700; flex-shrink: 0; }
+    .token-card.hexp .token-features li::before { color: var(--teal); }
+    .token-card.hmile .token-features li::before { color: var(--violet); }
+
+    .token-flow {
+      margin-top: 2.5rem;
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .token-flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+    }
+
+    .flow-node {
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .flow-arrow { color: var(--text-dim); font-size: 1.1rem; }
+
+    /* ===== TIMELINE ===== */
+    .timeline-track {
+      position: relative;
+      margin-top: 2.5rem;
+    }
+
+    .timeline-track::before {
+      content: '';
+      position: absolute;
+      left: 2rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--teal), var(--violet));
+      border-radius: 2px;
+    }
+
+    .timeline-phase {
+      position: relative;
+      padding: 0 0 2.5rem 5rem;
+      cursor: pointer;
+    }
+    .timeline-phase:last-child { padding-bottom: 0; }
+
+    .timeline-dot {
+      position: absolute;
+      left: 1.15rem;
+      top: 0.25rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      background: var(--bg-white);
+      transition: all 0.3s;
+      z-index: 2;
+    }
+
+    .timeline-phase:hover .timeline-dot {
+      background: var(--primary);
+      box-shadow: 0 0 12px rgba(0,87,255,0.3);
+    }
+
+    .timeline-phase-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-phase h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .timeline-phase p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.7; }
+
+    .timeline-milestones {
+      margin-top: 0.5rem;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.5s ease;
+    }
+    .timeline-phase.expanded .timeline-milestones { max-height: 500px; }
+
+    .timeline-milestones ul { list-style: none; padding-top: 0.5rem; }
+    .timeline-milestones li {
+      padding: 0.3rem 0;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding-left: 1.2rem;
+      position: relative;
+    }
+    .timeline-milestones li::before {
+      content: '//';
+      position: absolute;
+      left: 0;
+      color: var(--primary-soft);
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+
+    /* ===== WHY NOW ===== */
+    .why-now-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      text-align: left;
+    }
+
+    .why-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-sm);
+    }
+    .why-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-4px);
+    }
+
+    .why-card .card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .why-card h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .why-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; }
+
+    /* ===== CTA ===== */
+    #cta {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,87,255,0.06), transparent),
+        var(--bg-white);
+      text-align: center;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .cta-btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+    }
+    .cta-btn-primary:hover {
+      box-shadow: 0 6px 25px rgba(0,87,255,0.35);
+      transform: translateY(-2px);
+    }
+
+    .cta-btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+    .cta-btn-secondary:hover {
+      background: var(--primary-bg);
+      transform: translateY(-2px);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 2rem 40px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--primary); text-decoration: none; }
+
+    /* ===== SCROLL ANIMATION ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* ===== NAVIGATION DOTS ===== */
+    .nav-dots {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 2px solid var(--text-dim);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .nav-dot:hover, .nav-dot.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      box-shadow: 0 0 8px rgba(0,87,255,0.3);
+    }
+
+    .nav-dot .dot-label {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      background: var(--bg-card);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      font-weight: 600;
+    }
+    .nav-dot:hover .dot-label { opacity: 1; }
+
+    /* ===== SITE HEADER & TABS ===== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+    .site-header.scrolled { box-shadow: var(--shadow-md); }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 56px;
+    }
+
+    .header-brand {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .header-brand span { font-weight: 400; color: var(--text-dim); margin-left: 6px; }
+
+    .header-tabs {
+      display: flex;
+      gap: 0;
+      height: 100%;
+    }
+
+    .header-tab {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      transition: all 0.25s;
+      user-select: none;
+      white-space: nowrap;
+      height: 56px;
+    }
+    .header-tab:hover { color: var(--primary); }
+    .header-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Page containers */
+    .page-container { display: none; }
+    .page-container.active { display: block; }
+
+    /* Adjust hero padding for header */
+    .site-header ~ .page-container #hero { padding-top: 180px; }
+
+    /* ===== TOKENOMICS PAGE STYLES ===== */
+    .token-page-hero {
+      background: linear-gradient(135deg, rgba(124,92,252,0.04), rgba(0,87,255,0.04));
+      text-align: center;
+      padding-top: 160px !important;
+    }
+
+    .dual-coin-overview {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      align-items: stretch;
+      margin-top: 3rem;
+    }
+
+    .coin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .coin-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-4px);
+    }
+
+    .coin-card h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+    .coin-card .coin-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .coin-card .coin-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+    }
+    .coin-card .coin-detail-list {
+      list-style: none;
+      font-size: 0.88rem;
+      line-height: 2;
+      color: var(--text-secondary);
+    }
+    .coin-card .coin-detail-list li::before {
+      content: '→ ';
+      color: var(--text-dim);
+    }
+
+    .coin-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1.5rem;
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .coin-arrow .arrow-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+      color: var(--primary);
+    }
+
+    .token-table-wrapper {
+      overflow-x: auto;
+      margin-top: 2rem;
+    }
+
+    .token-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.85rem;
+    }
+    .token-table thead th {
+      background: var(--bg-soft);
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--border);
+    }
+    .token-table thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+    .token-table thead th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+    .token-table tbody td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .token-table tbody tr:hover td { background: var(--primary-bg); }
+
+    .formula-block {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    .mechanism-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .mechanism-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .mechanism-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+    .mechanism-card p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    .flywheel-diagram {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      margin: 2rem 0;
+      text-align: center;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      line-height: 2;
+      white-space: pre-wrap;
+      color: var(--text-primary);
+    }
+
+    /* ===== PARTNERS PAGE STYLES ===== */
+    .partner-tier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .partner-tier-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s;
+    }
+    .partner-tier-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-4px);
+    }
+    .partner-tier-card .tier-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+    .partner-tier-card .tier-quota {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    .partner-tier-card .tier-fee {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 0.3rem;
+    }
+    .partner-tier-card .tier-fee-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .partner-tier-card .tier-features {
+      list-style: none;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 2;
+      text-align: left;
+    }
+    .partner-tier-card .tier-features li::before {
+      content: '✓ ';
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .scenario-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      margin-top: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .scenario-card h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .scenario-card .scenario-persona {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+    }
+    .scenario-card .scenario-body {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+    .scenario-card .scenario-body strong { color: var(--text-primary); }
+    .scenario-card .scenario-results {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+    .scenario-result-item {
+      text-align: center;
+    }
+    .scenario-result-item .result-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .scenario-result-item .result-label {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .npo-callout {
+      background: linear-gradient(135deg, var(--teal-bg), var(--primary-bg));
+      border: 1px solid rgba(0,180,160,0.15);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      margin-top: 2rem;
+    }
+    .npo-callout h4 {
+      color: var(--teal);
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .npo-callout p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+    .npo-callout ul {
+      list-style: none;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 2;
+    }
+    .npo-callout ul li::before {
+      content: '💚 ';
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .section { padding: 60px 24px; }
+      .rx-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .token-comparison { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .timeline-track::before { left: 1rem; }
+      .timeline-phase { padding-left: 3.5rem; }
+      .timeline-dot { left: 0.15rem; }
+      .header-inner { padding: 0 16px; }
+      .header-tab { padding: 0 12px; font-size: 0.75rem; }
+      .header-brand span { display: none; }
+      .dual-coin-overview { grid-template-columns: 1fr; gap: 1.5rem; }
+      .coin-arrow { flex-direction: row; padding: 0.5rem 0; }
+      .coin-arrow .arrow-icon { transform: rotate(90deg); margin-bottom: 0; margin-right: 0.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .section { padding: 50px 16px; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .vision-pillars { grid-template-columns: 1fr; }
+      .vitality-grid { grid-template-columns: 1fr; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .header-tab { padding: 0 8px; font-size: 0.7rem; }
+      .partner-tier-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Site Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <div class="header-brand">Project SYNC<span>by Soking</span></div>
+      <div class="header-tabs">
+        <div class="header-tab active" data-page="overview">計畫總覽</div>
+        <div class="header-tab" data-page="tokenomics">代幣經濟學</div>
+        <div class="header-tab" data-page="partners">活水夥伴</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== PAGE: OVERVIEW ========== -->
+  <div class="page-container active" id="page-overview">
+
+  <!-- Navigation Dots -->
+  <nav class="nav-dots" id="navDots">
+    <div class="nav-dot active" data-target="hero"><span class="dot-label">HOME</span></div>
+    <div class="nav-dot" data-target="gap"><span class="dot-label">THE GAP</span></div>
+    <div class="nav-dot" data-target="vision"><span class="dot-label">VISION</span></div>
+    <div class="nav-dot" data-target="ecosystem"><span class="dot-label">ECOSYSTEM</span></div>
+    <div class="nav-dot" data-target="behavioral-rx"><span class="dot-label">BEHAVIORAL Rx</span></div>
+    <div class="nav-dot" data-target="social-rx"><span class="dot-label">SOCIAL Rx</span></div>
+    <div class="nav-dot" data-target="vitality"><span class="dot-label">PARTNERS</span></div>
+    <div class="nav-dot" data-target="tokens"><span class="dot-label">TOKEN</span></div>
+    <div class="nav-dot" data-target="timeline"><span class="dot-label">ROADMAP</span></div>
+    <div class="nav-dot" data-target="why-now"><span class="dot-label">WHY NOW</span></div>
+    <div class="nav-dot" data-target="cta"><span class="dot-label">JOIN US</span></div>
+  </nav>
+
+  <!-- Tooltip for ecosystem -->
+  <div class="node-tooltip" id="nodeTooltip">
+    <h4 id="tooltipTitle"></h4>
+    <p id="tooltipDesc"></p>
+    <div class="tooltip-flows" id="tooltipFlows"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 1. HERO                                     -->
+  <!-- ============================================ -->
+  <section class="section" id="hero">
+    <div class="section-inner" style="text-align:center;">
+      <div class="hero-badge fade-in">Google.org AI Opportunity Fund Proposal</div>
+      <h1 class="hero-title fade-in fade-in-delay-1">
+        <span class="accent-primary">Project SYNC</span>
+        <span style="font-size:0.5em; font-weight:400; color:var(--text-secondary); margin-top:0.5rem;">
+          Synchronized Yielding Nexus for Care
+        </span>
+      </h1>
+      <p class="hero-tagline fade-in fade-in-delay-2">
+        當醫療只能陪伴病人 0.1% 的人生，<br>
+        我們如何守護剩下的 99.9%？
+      </p>
+      <div class="section-divider center fade-in fade-in-delay-3"></div>
+      <p class="fade-in fade-in-delay-3" style="color:var(--text-dim); font-size:0.9rem; margin-top:1rem;">
+        AI 驅動的全人健康守護計畫<br>
+        結合行為處方箋 × 社會處方箋 × 雙幣經濟
+      </p>
+    </div>
+    <div class="scroll-indicator">
+      <span>SCROLL</span>
+      <div class="arrow"></div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 2. THE GAP                                  -->
+  <!-- ============================================ -->
+  <section class="section section-alt" id="gap">
+    <div class="section-inner">
+      <span class="section-label fade-in">// THE GAP</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        醫療體系的<span class="accent-coral">結構性盲點</span>
+      </h2>
+      <div class="section-divider fade-in fade-in-delay-1"></div>
+
+      <div class="stat-grid fade-in fade-in-delay-2">
+        <div class="stat-card">
+          <div class="stat-number accent-coral">0.1%</div>
+          <div class="stat-label">病人一生中<br>在醫療機構的時間佔比</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number accent-primary">99.9%</div>
+          <div class="stat-label">醫療觸及不到的<br>日常生活時間</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number accent-amber">86%</div>
+          <div class="stat-label">台灣慢性病死亡率<br>佔總死因比例</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number accent-teal">3 min</div>
+          <div class="stat-label">台灣門診平均<br>每次看診時間</div>
+        </div>
+      </div>
+
+      <div class="narrative-text fade-in fade-in-delay-3">
+        <p>
+          在台灣，醫療系統每年承受超過 <strong>3.6 億次門診</strong>，每位病人平均只有 3 分鐘面對醫師。
+          醫師精確地診斷、開出藥物處方，但離開診間後的生活 —— 飲食、運動、睡眠、社交、心理狀態 ——
+          幾乎完全脫離醫療體系的視線。
+        </p>
+        <p style="margin-top:1rem;">
+          這不是醫療系統的失職，而是<strong>結構性的限制</strong>。
+          現有醫療基礎建設只能處理「疾病」，卻無法支撐「健康」。
+        </p>
+      </div>
+
+      <div class="quote-block fade-in fade-in-delay-4">
+        「我們有全世界最便利的醫療，卻沒有支撐全人健康的數位基礎建設。」
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 3. VISION                                   -->
+  <!-- ============================================ -->
+  <section class="section" id="vision">
+    <div class="section-inner">
+      <span class="section-label fade-in">// VISION</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        <span class="accent-teal">數位分身</span> × 行為處方箋
+      </h2>
+      <div class="section-divider fade-in fade-in-delay-1"></div>
+
+      <p class="section-subtitle fade-in fade-in-delay-2">
+        Project SYNC 打造一個 AI 驅動的健康守護架構，讓醫療從「治療疾病」延伸到「守護健康」，
+        透過行為設計將健康行為融入日常生活的每個角落。
+      </p>
+
+      <div class="vision-pillars fade-in fade-in-delay-3">
+        <div class="pillar-card">
+          <div class="pillar-icon">🧬</div>
+          <h3>全人數位分身</h3>
+          <p>
+            結合穿戴裝置、電子病歷、行為日誌，建構每位使用者的多維健康數位分身。
+            不只是數據收集，而是將生理、心理、社交、環境整合成可持續追蹤的動態模型。
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">💊</div>
+          <h3>AI 行為處方箋</h3>
+          <p>
+            AI 分析數位分身資料後，產出個人化的「行為處方箋」——不只告訴你要做什麼，
+            更設計符合個人生活節奏的行動步驟，讓健康行為像吃藥一樣自然。
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">🤝</div>
+          <h3>社會處方箋</h3>
+          <p>
+            英國 NHS 驗證的社會處方箋模式 —— 透過社區據點、在地夥伴、同儕支持網絡，
+            讓健康行為有社交環境的承托，而非孤軍奮鬥。
+          </p>
+        </div>
+      </div>
+
+      <div class="narrative-text fade-in fade-in-delay-4" style="margin-top:3rem;">
+        <p>
+          我們想像的未來是：一位三高的中年上班族，每天早上打開手機收到一份「今日處方」——
+          中午走去附近的合作餐廳享受低GI午餐（hMile 折扣）、
+          下班到社區據點參加30分鐘的伸展課（hEXP 點數累積）。
+          他的醫師在下次回診前，已經看到持續兩週的改善曲線。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 4. ECOSYSTEM                                -->
+  <!-- ============================================ -->
+  <section class="section section-alt" id="ecosystem">
+    <div class="section-inner ecosystem-container">
+      <span class="section-label fade-in">// ECOSYSTEM</span>
+      <h2 class="section-title fade-in fade-in-delay-1" style="text-align:center;">
+        <span class="accent-primary">健康行為生態系</span>
+      </h2>
+      <p class="section-subtitle fade-in fade-in-delay-1" style="text-align:center; margin-bottom:1rem;">
+        不是單向的醫療對病人，而是五個角色互為活水的正循環系統
+      </p>
+      <div class="section-divider center fade-in fade-in-delay-1"></div>
+
+      <div id="ecosystem-graph" class="fade-in fade-in-delay-2"></div>
+
+      <div class="ecosystem-legend fade-in fade-in-delay-3">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>資料流</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--violet)"></div>獎勵流</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--primary)"></div>服務流</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>能量流</div>
+      </div>
+
+      <div class="narrative-text fade-in fade-in-delay-3" style="text-align:center; margin-left:auto; margin-right:auto;">
+        <p>
+          點擊或懸停節點查看角色詳情，拖拽節點重新排列。<br>
+          每個角色既是貢獻者也是受益者 —— 這就是<strong>同步合作經濟</strong>的核心設計。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 5. BEHAVIORAL PRESCRIPTION                  -->
+  <!-- ============================================ -->
+  <section class="section" id="behavioral-rx">
+    <div class="section-inner">
+      <span class="section-label fade-in">// BEHAVIORAL PRESCRIPTION</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        讓健康行為<span class="accent-teal">像藥物一樣精準</span>
+      </h2>
+      <div class="section-divider fade-in fade-in-delay-1"></div>
+
+      <div class="rx-layout fade-in fade-in-delay-2">
+        <div>
+          <p class="narrative-text" style="margin-top:0; margin-bottom:2rem;">
+            行為處方箋不是衛教單張，而是一套 AI 驅動的<strong>個人化行為設計系統</strong>。
+            它分析使用者的生理數據、生活節奏、偏好與能力，產出可執行的行為建議。
+          </p>
+
+          <ol class="rx-steps">
+            <li>
+              <strong>數據收集</strong>
+              穿戴裝置連續記錄心率、睡眠、步數、壓力指標
+            </li>
+            <li>
+              <strong>AI 分析與風險評估</strong>
+              數位分身模型識別偏離健康軌道的信號
+            </li>
+            <li>
+              <strong>行為處方生成</strong>
+              產出符合 W3C Verifiable Credential 規格的處方箋
+            </li>
+            <li>
+              <strong>社區驗證與執行</strong>
+              社區據點或合作商家掃碼驗證，完成行為挑戰
+            </li>
+            <li>
+              <strong>回饋循環</strong>
+              行為完成後獲得 hEXP，AI 模型更新下一週期的處方
+            </li>
+          </ol>
+        </div>
+
+        <div class="rx-visual">
+          <div class="rx-visual-content">
+            <div class="rx-emoji">💊</div>
+            <h4>一張處方的旅程</h4>
+            <p style="text-align:left; margin-top:1rem;">
+              <span class="accent-teal" style="font-weight:700;">08:00</span> — 早晨推播：今日行為處方<br>
+              <span class="accent-primary" style="font-weight:700;">12:30</span> — 步行至合作餐廳：低GI午餐<br>
+              <span class="accent-amber" style="font-weight:700;">18:00</span> — 社區據點：30分鐘團體伸展<br>
+              <span class="accent-violet" style="font-weight:700;">21:00</span> — 完成回報 → 獲得 15 hEXP<br>
+              <span class="accent-teal" style="font-weight:700;">21:30</span> — AI 更新數位分身模型
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 6. SOCIAL PRESCRIPTION                      -->
+  <!-- ============================================ -->
+  <section class="section section-alt" id="social-rx">
+    <div class="section-inner">
+      <span class="section-label fade-in">// SOCIAL PRESCRIPTION</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        健康不是<span class="accent-primary">一個人的事</span>
+      </h2>
+      <div class="section-divider fade-in fade-in-delay-1"></div>
+
+      <div class="rx-layout fade-in fade-in-delay-2">
+        <div class="rx-visual">
+          <div class="rx-visual-content">
+            <div class="rx-emoji">🏘️</div>
+            <h4>社會處方箋生態</h4>
+            <p style="text-align:left; margin-top:1rem;">
+              <strong>Link Worker</strong> — 社區健康連結員<br>
+              串連個人需求與在地資源<br><br>
+              <strong>社區據點</strong> — 里民活動中心、宗教場所、公園<br>
+              提供活動場域與社交網絡<br><br>
+              <strong>同儕支持</strong> — 病友團體、運動夥伴<br>
+              用社交壓力與鼓勵推動行為持續<br><br>
+              <strong>數位驗證</strong> — TW DIW × W3C VC<br>
+              參與紀錄可攜帶、可驗證、隱私保護
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <p class="narrative-text" style="margin-top:0;">
+            社會處方箋源自英國 NHS，核心洞察是：<strong>許多健康問題的根源不在醫療，而在社會</strong>。
+            孤獨、缺乏運動夥伴、不知道社區資源 —— 這些比藥物更難開處方。
+          </p>
+
+          <p class="narrative-text">
+            Project SYNC 將社會處方箋數位化，導入台灣豐富的社區基礎建設。
+            台灣有超過 <strong>4,200 個社區關懷據點</strong>、<strong>9,600 個里辦公處</strong>，
+            這些場域已經有人力與空間，缺的是數位串連與激勵機制。
+          </p>
+
+          <div class="quote-block">
+            社會處方箋的關鍵不是開出處方，而是<strong>讓社區的力量被系統看見</strong>。
+          </div>
+
+          <p class="narrative-text">
+            透過 TW DIW（台灣數位身分錢包）與 W3C Verifiable Credentials，
+            每一次社區參與都成為可驗證的健康憑證 —— 保護隱私的同時，讓健康行為有據可查。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 7. VITALITY PARTNERS                        -->
+  <!-- ============================================ -->
+  <section class="section" id="vitality">
+    <div class="section-inner">
+      <span class="section-label fade-in">// VITALITY PARTNERS</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        <span class="accent-amber">活水夥伴</span>：讓商業成為健康的推力
+      </h2>
+      <div class="section-divider fade-in fade-in-delay-1"></div>
+
+      <p class="section-subtitle fade-in fade-in-delay-2">
+        活水夥伴不是贊助商，是生態系中與使用者共同成長的商業參與者。
+        他們提供的不只是商品或服務，而是「健康行為的場景」。
+      </p>
+
+      <div class="vitality-grid fade-in fade-in-delay-3">
+        <div class="vitality-card">
+          <div class="card-icon">🍱</div>
+          <h4>健康餐飲</h4>
+          <p>提供符合處方建議的餐點，使用者出示行為處方可享 hMile 折扣。餐廳獲得穩定客源與健康品牌加值。</p>
+        </div>
+        <div class="vitality-card">
+          <div class="card-icon">🏋️</div>
+          <h4>運動場館</h4>
+          <p>成為行為處方的執行場域。單次體驗免費或折扣，長期轉換為會員。場館獲得精準導流。</p>
+        </div>
+        <div class="vitality-card">
+          <div class="card-icon">🧘</div>
+          <h4>身心靈服務</h4>
+          <p>冥想、瑜伽、心理諮商等服務供應者。社會處方箋可導入心理健康維度的介入。</p>
+        </div>
+        <div class="vitality-card">
+          <div class="card-icon">💊</div>
+          <h4>健康零售</h4>
+          <p>藥妝店、健康食品店。提供處方箋建議的營養補充品，累積 hEXP 可兌換特定商品。</p>
+        </div>
+        <div class="vitality-card">
+          <div class="card-icon">🏥</div>
+          <h4>醫療機構</h4>
+          <p>診所與醫院。獲得病人離院後的持續行為數據，提升治療計畫的成效追蹤能力。</p>
+        </div>
+        <div class="vitality-card">
+          <div class="card-icon">🏢</div>
+          <h4>企業雇主</h4>
+          <p>企業福利計畫整合。員工健康數據匿名統計後回饋企業，降低醫療支出、提升生產力。</p>
+        </div>
+      </div>
+
+      <div class="narrative-text fade-in fade-in-delay-4" style="margin-top:2.5rem;">
+        <p>
+          活水夥伴透過 <strong>7 級參與路徑</strong> 逐步深化合作：
+          從免費加入（Level 1）到數據整合（Level 5）再到品牌聯名（Level 7）。
+          每一級都有明確的權益與義務，確保生態系的品質與信任。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 8. DUAL TOKEN                               -->
+  <!-- ============================================ -->
+  <section class="section section-alt" id="tokens">
+    <div class="section-inner">
+      <span class="section-label fade-in">// DUAL TOKEN ECONOMY</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        <span class="accent-teal">hEXP</span> + <span class="accent-violet">hMile</span>：健康經濟引擎
+      </h2>
+      <div class="section-divider fade-in fade-in-delay-1"></div>
+
+      <p class="section-subtitle fade-in fade-in-delay-2">
+        健康行為需要即時回饋才能持續。雙幣模型讓「做對的事」有看得見的回報。
+      </p>
+
+      <div class="token-comparison fade-in fade-in-delay-3">
+        <div class="token-card hexp">
+          <div class="token-name accent-teal">hEXP</div>
+          <div class="token-subtitle">Health Experience Points</div>
+          <ul class="token-features">
+            <li>完成行為處方獲得，不可轉讓</li>
+            <li>代表個人健康行為的累積成就</li>
+            <li>達到特定等級解鎖新功能與權益</li>
+            <li>類似遊戲「經驗值」，只增不減</li>
+            <li>用於衡量長期健康行為投入程度</li>
+          </ul>
+        </div>
+
+        <div class="token-card hmile">
+          <div class="token-name accent-violet">hMile</div>
+          <div class="token-subtitle">Health Mileage</div>
+          <ul class="token-features">
+            <li>完成行為處方或合作活動獲得</li>
+            <li>可在活水夥伴網絡中兌換優惠</li>
+            <li>有有效期限，鼓勵持續參與</li>
+            <li>類似「哩程」，可消費可累積</li>
+            <li>建構健康行為的商業激勵循環</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="token-flow fade-in fade-in-delay-4">
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.5rem; font-weight:600;">價值循環</p>
+        <div class="token-flow-diagram">
+          <span class="flow-node" style="background:var(--teal-bg); border:1px solid rgba(0,180,160,0.25);">健康行為</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="flow-node" style="background:var(--primary-bg); border:1px solid rgba(0,87,255,0.2);">hEXP + hMile</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="flow-node" style="background:var(--amber-bg); border:1px solid rgba(255,159,28,0.25);">活水夥伴優惠</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="flow-node" style="background:var(--violet-bg); border:1px solid rgba(124,92,252,0.25);">持續參與動力</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="flow-node" style="background:var(--teal-bg); border:1px solid rgba(0,180,160,0.25);">健康行為</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 9. TIMELINE                                 -->
+  <!-- ============================================ -->
+  <section class="section" id="timeline">
+    <div class="section-inner">
+      <span class="section-label fade-in">// ROADMAP</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        從概念到<span class="accent-primary">規模化</span>的旅程
+      </h2>
+      <div class="section-divider fade-in fade-in-delay-1"></div>
+
+      <div class="timeline-track fade-in fade-in-delay-2">
+
+        <div class="timeline-phase" onclick="togglePhase(this)">
+          <div class="timeline-dot" style="border-color:var(--teal);"></div>
+          <div class="timeline-phase-label">PHASE 0 — Q1 2026</div>
+          <h4>概念驗證 × Google.org 提案</h4>
+          <p>以研究型提案形式，驗證 AI 行為處方箋與社會處方箋在台灣場景的可行性。</p>
+          <div class="timeline-milestones">
+            <ul>
+              <li>完成健康行為生態系利益相關者訪談 30 人</li>
+              <li>建構 AI 行為處方箋 Prompt 原型</li>
+              <li>與 2 間診所建立 MOU</li>
+              <li>提交 Google.org AI Opportunity Fund 申請</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" onclick="togglePhase(this)">
+          <div class="timeline-dot" style="border-color:var(--primary);"></div>
+          <div class="timeline-phase-label">PHASE 1 — Q2-Q3 2026</div>
+          <h4>MVP 行為處方箋系統</h4>
+          <p>建構核心技術架構，以 LINE 為載體部署第一版行為處方箋系統。</p>
+          <div class="timeline-milestones">
+            <ul>
+              <li>LINE Bot 行為處方推播系統上線</li>
+              <li>穿戴裝置 SDK 整合（Apple Health / Google Fit）</li>
+              <li>hEXP 中心化點數系統啟用</li>
+              <li>50 位先導使用者參與測試</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" onclick="togglePhase(this)">
+          <div class="timeline-dot" style="border-color:var(--primary-soft);"></div>
+          <div class="timeline-phase-label">PHASE 2 — Q3-Q4 2026</div>
+          <h4>社會處方箋 × TW DIW 整合</h4>
+          <p>導入 W3C Verifiable Credential 與台灣數位身分錢包，建構可驗證的健康憑證體系。</p>
+          <div class="timeline-milestones">
+            <ul>
+              <li>社會處方箋 VC 規格制定</li>
+              <li>TW DIW 選擇性揭露整合</li>
+              <li>3 個社區據點導入試營運</li>
+              <li>首批 5 家活水夥伴上線</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" onclick="togglePhase(this)">
+          <div class="timeline-dot" style="border-color:var(--amber);"></div>
+          <div class="timeline-phase-label">PHASE 3 — Q1-Q2 2027</div>
+          <h4>Token 經濟 × 活水夥伴開放</h4>
+          <p>導入鏈上 hMile 流通機制，開放活水夥伴自助申請，建構商業永續模型。</p>
+          <div class="timeline-milestones">
+            <ul>
+              <li>hMile 區塊鏈流通機制（選用 Polygon/Arbitrum）</li>
+              <li>活水夥伴自助管理後台上線</li>
+              <li>20+ 活水夥伴加入</li>
+              <li>500+ 活躍使用者</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" onclick="togglePhase(this)">
+          <div class="timeline-dot" style="border-color:var(--violet);"></div>
+          <div class="timeline-phase-label">PHASE 4 — Q3+ 2027</div>
+          <h4>生態系規模化</h4>
+          <p>驗證商業模型後，向其他城市與國家複製。開放 API 供第三方接入生態系。</p>
+          <div class="timeline-milestones">
+            <ul>
+              <li>跨城市部署（台北 → 台中 → 高雄）</li>
+              <li>開放 API 供保險業者、政府機關接入</li>
+              <li>5,000+ 活躍使用者</li>
+              <li>生態系 GMV 達成自償標準</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 10. WHY NOW                                 -->
+  <!-- ============================================ -->
+  <section class="section section-alt" id="why-now">
+    <div class="section-inner">
+      <span class="section-label fade-in" style="text-align:center; display:block;">// WHY NOW</span>
+      <h2 class="section-title fade-in fade-in-delay-1" style="text-align:center;">
+        為什麼是<span class="accent-primary">現在</span>？
+      </h2>
+      <div class="section-divider center fade-in fade-in-delay-1"></div>
+
+      <div class="why-now-grid fade-in fade-in-delay-2">
+        <div class="why-card">
+          <div class="card-icon">🤖</div>
+          <h4>AI 技術成熟</h4>
+          <p>
+            大型語言模型讓個人化行為處方成為可能。過去需要專業營養師 1 對 1 的工作，
+            現在 AI 可以在幾秒內完成 —— 而且 24/7 持續服務。
+          </p>
+        </div>
+        <div class="why-card">
+          <div class="card-icon">🪪</div>
+          <h4>TW DIW 數位身分基建</h4>
+          <p>
+            台灣正在推動的數位身分錢包（TW DIW）採用 W3C DID/VC 標準，
+            提供隱私保護的選擇性揭露能力 —— 這正是健康數據流通的關鍵基礎。
+          </p>
+        </div>
+        <div class="why-card">
+          <div class="card-icon">🌍</div>
+          <h4>Google.org AI Opportunity Fund</h4>
+          <p>
+            Google.org 提供高達 $500K 的資助，專門支持運用 AI 改善社會福祉的計畫。
+            Project SYNC 完美契合其「AI for Social Good」的核心目標。
+          </p>
+        </div>
+        <div class="why-card">
+          <div class="card-icon">🏥</div>
+          <h4>醫療系統轉型壓力</h4>
+          <p>
+            台灣健保財務壓力持續增加，預防醫學與健康促進已成為政策優先方向。
+            醫療院所需要能延伸照護邊界的數位工具。
+          </p>
+        </div>
+      </div>
+
+      <div class="narrative-text fade-in fade-in-delay-3" style="text-align:center; margin-left:auto; margin-right:auto; margin-top:3rem;">
+        <p>
+          技術、政策、商業、社會需求 —— 四條線在 2026 年交匯。<br>
+          <strong>這是一個稍縱即逝的時間窗口。</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 11. CTA                                     -->
+  <!-- ============================================ -->
+  <section class="section" id="cta">
+    <div class="section-inner" style="text-align:center;">
+      <span class="section-label fade-in">// JOIN THE SYNC</span>
+      <h2 class="section-title fade-in fade-in-delay-1">
+        <span class="accent-primary">一起守護</span> 99.9% 的健康時光
+      </h2>
+      <div class="section-divider center fade-in fade-in-delay-1"></div>
+
+      <p class="section-subtitle fade-in fade-in-delay-2" style="margin-left:auto; margin-right:auto; text-align:center;">
+        Project SYNC 正在尋找志同道合的夥伴 —— 醫療機構、社區組織、科技夥伴、活水商家 ——
+        一起建構台灣第一個 AI 驅動的全人健康數位基礎建設。
+      </p>
+
+      <div class="cta-buttons fade-in fade-in-delay-3">
+        <a href="mailto:soking@soking.cc?subject=Project%20SYNC%20合作洽詢" class="cta-btn cta-btn-primary">
+          聯繫我們
+        </a>
+        <a href="https://soking.cc" class="cta-btn cta-btn-secondary">
+          了解 Soking
+        </a>
+      </div>
+
+      <p class="fade-in fade-in-delay-4" style="margin-top:3rem; font-size:0.82rem; color:var(--text-dim);">
+        Designed by Soking — UX Designer × Brand Consultant × AI Strategist
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2026 <a href="https://soking.cc">Soking</a> — Project SYNC Visualization</p>
+  </footer>
+
+  </div><!-- END page-overview -->
+
+  <!-- ========== PAGE: TOKENOMICS ========== -->
+  <div class="page-container" id="page-tokenomics">
+
+    <!-- Token Hero -->
+    <section class="section token-page-hero" id="token-hero">
+      <div class="section-inner" style="text-align:center;">
+        <div class="hero-badge fade-in">hEXP / hMile 雙幣系統</div>
+        <h1 class="hero-title fade-in fade-in-delay-1">
+          <span class="accent-violet">代幣經濟學</span>
+          <span style="font-size:0.45em; font-weight:400; color:var(--text-secondary); margin-top:0.5rem; display:block;">
+            Tokenomics White Paper
+          </span>
+        </h1>
+        <p class="hero-tagline fade-in fade-in-delay-2">
+          健康不是可以被炒作的商品，<br>但健康行為是可以被獎勵的勞動。
+        </p>
+        <div class="section-divider center fade-in fade-in-delay-3"></div>
+      </div>
+    </section>
+
+    <!-- Dual Coin Architecture -->
+    <section class="section section-alt" id="token-dual">
+      <div class="section-inner">
+        <span class="section-label fade-in">// DUAL COIN ARCHITECTURE</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          雙幣<span class="accent-violet">分離</span>設計
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+        <p class="section-subtitle fade-in fade-in-delay-2">
+          刻意區隔「投入度量測」與「價值流通」兩個層次，避免單一代幣同時承載聲譽與交易功能所導致的激勵扭曲。
+        </p>
+
+        <div class="dual-coin-overview fade-in fade-in-delay-3">
+          <!-- hEXP -->
+          <div class="coin-card">
+            <div class="coin-badge" style="background:var(--teal-bg); color:var(--teal);">SOULBOUND</div>
+            <h3 class="accent-teal">hEXP</h3>
+            <div class="coin-subtitle">健康經驗值 — 靈魂綁定層</div>
+            <ul class="coin-detail-list">
+              <li>不可轉讓、不可交易</li>
+              <li>代表「你做了多少」</li>
+              <li>綁定於數位分身</li>
+              <li>行為事後鑄造（mint-on-completion）</li>
+              <li>具衰減機制（停止參與則漸減）</li>
+              <li>最低保底：歷史峰值 20%</li>
+            </ul>
+          </div>
+
+          <!-- Arrow -->
+          <div class="coin-arrow">
+            <div class="arrow-icon">→</div>
+            <div>達標轉換<br>單向閘門</div>
+          </div>
+
+          <!-- hMile -->
+          <div class="coin-card">
+            <div class="coin-badge" style="background:var(--violet-bg); color:var(--violet);">CIRCULATING</div>
+            <h3 class="accent-violet">hMile</h3>
+            <div class="coin-subtitle">健康里程幣 — 流通價值層</div>
+            <ul class="coin-detail-list">
+              <li>可授權、可兌換、可追溯</li>
+              <li>代表「你的行為值多少」</li>
+              <li>經行為驗證的注意力憑證</li>
+              <li>365 天未使用自動銷毀</li>
+              <li>不可直接變現（非投機工具）</li>
+              <li>每月轉換上限 50 hMile</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative-text fade-in fade-in-delay-3" style="margin-top:2rem;">
+          <p><strong>為什麼要分兩層？</strong> 如果只有一種幣，使用者會傾向「最小成本獲取最大代幣」而非「最大化健康行為」。hEXP 是一面不會騙人的鏡子——它只反映你真實投入了多少。hMile 必須以 hEXP 為基礎，沒有捷徑。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- hEXP Details -->
+    <section class="section" id="token-hexp">
+      <div class="section-inner">
+        <span class="section-label fade-in">// hEXP — SOULBOUND TOKEN</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          <span class="accent-teal">hEXP</span> 健康經驗值
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <h3 class="fade-in fade-in-delay-2" style="margin-top:2rem; font-size:1.1rem;">基礎行為產出表</h3>
+        <div class="token-table-wrapper fade-in fade-in-delay-2">
+          <table class="token-table">
+            <thead>
+              <tr><th>行為類別</th><th>行為事件</th><th>基礎 hEXP</th><th>驗證方式</th><th>頻率上限</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>🏃 運動</td><td>每日步行達標（3000步）</td><td>10</td><td>穿戴裝置 API</td><td>1 次/天</td></tr>
+              <tr><td>🏃 運動</td><td>社區據點運動課出席</td><td>20</td><td>QR/NFC 簽到</td><td>1 次/天</td></tr>
+              <tr><td>🤝 社交</td><td>參加社區活動</td><td>15</td><td>QR/NFC 簽到 + VC</td><td>2 次/天</td></tr>
+              <tr><td>🤝 社交</td><td>完成病友互助任務</td><td>25</td><td>雙方確認 + AI 驗證</td><td>1 次/天</td></tr>
+              <tr><td>🏥 醫療</td><td>回診完成</td><td>30</td><td>健保系統對接</td><td>依處方</td></tr>
+              <tr><td>🏥 醫療</td><td>行為處方箋階段完成</td><td>50</td><td>AI 綜合評估</td><td>依處方</td></tr>
+              <tr><td>🍽️ 飲食</td><td>每日飲食紀錄</td><td>5</td><td>自主回報 + AI</td><td>1 次/天</td></tr>
+              <tr><td>📖 學習</td><td>完成衛教內容</td><td>8</td><td>閱讀 + 測驗</td><td>3 次/天</td></tr>
+              <tr><td>🌊 活水</td><td>完成活水夥伴任務</td><td>12-40</td><td>依任務條件</td><td>依設定</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="fade-in" style="margin-top:3rem; font-size:1.1rem;">加成與衰減機制</h3>
+        <div class="mechanism-grid fade-in">
+          <div class="mechanism-card">
+            <h4>🔥 連續天數加成</h4>
+            <div class="formula-block">1-7 天連續：  ×1.0
+8-14 天連續： ×1.2
+15-30 天連續：×1.5
+31-60 天連續：×1.8
+61+ 天連續：  ×2.0（上限）</div>
+          </div>
+          <div class="mechanism-card">
+            <h4>🎯 行為多樣性加成</h4>
+            <div class="formula-block">當日 1 類行為：×1.0
+當日 2 類行為：×1.1
+當日 3 類行為：×1.2
+當日 4+ 類行為：×1.3（上限）</div>
+          </div>
+          <div class="mechanism-card">
+            <h4>📉 衰減機制</h4>
+            <div class="formula-block">停止後 1-7 天：  不衰減（寬限期）
+停止後 8-14 天： 每日 -1%
+停止後 15-30 天：每日 -2%
+停止後 31+ 天：  每日 -3%
+
+保底：不低於歷史峰值 20%</div>
+          </div>
+          <div class="mechanism-card">
+            <h4>⭐ 等級門檻</h4>
+            <div class="formula-block">Lv.1 入門者   0     基礎任務
+Lv.2 行動者   500   hMile 轉換權
+Lv.3 實踐者   2,000 病友互助權
+Lv.4 倡議者   5,000 邀請機制
+Lv.5 典範者   12,000 任務策劃權</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- hMile Details -->
+    <section class="section section-alt" id="token-hmile">
+      <div class="section-inner">
+        <span class="section-label fade-in">// hMile — CIRCULATING TOKEN</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          <span class="accent-violet">hMile</span> 健康里程幣
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <p class="narrative-text fade-in fade-in-delay-2">
+          hMile 不是貨幣，不是證券，而是一種<strong>經過行為驗證的注意力憑證</strong>——持有 hMile 的人，已經用真實的健康行為證明了自己的參與意願，商家為這份注意力買單。
+        </p>
+
+        <h3 class="fade-in" style="margin-top:2.5rem; font-size:1.1rem;">三個供給水龍頭</h3>
+        <div class="mechanism-grid fade-in">
+          <div class="mechanism-card">
+            <h4>🔄 hEXP 轉換</h4>
+            <p>使用者端鑄造。100 hEXP = 1 hMile（基礎率），可依健康成效獲得最高 ×2.0 加成。每人每月上限 50 hMile。</p>
+          </div>
+          <div class="mechanism-card">
+            <h4>🌊 活水夥伴注入</h4>
+            <p>活水夥伴以實質承諾金為擔保，1:1 鑄造 hMile 進入獎勵池。基準匯率 1 hMile ≈ NT$2-5。</p>
+          </div>
+          <div class="mechanism-card">
+            <h4>⚙️ 系統鑄造</h4>
+            <p>用於冷啟動激勵與弱勢補貼。月上限為流通量 10%，需治理委員會核准。</p>
+          </div>
+        </div>
+
+        <h3 class="fade-in" style="margin-top:2.5rem; font-size:1.1rem;">銷毀場景（Token Sink）</h3>
+        <div class="token-table-wrapper fade-in">
+          <table class="token-table">
+            <thead>
+              <tr><th>銷毀場景</th><th>機制說明</th><th>預估佔比</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>商家兌換</td><td>使用者用 hMile 兌換商品/服務，hMile 銷毀</td><td>40%</td></tr>
+              <tr><td>數據授權費</td><td>授權行為數據時收取少量手續費銷毀</td><td>15%</td></tr>
+              <tr><td>進階功能</td><td>數位孿生裝飾、進階分析報告消耗 hMile</td><td>10%</td></tr>
+              <tr><td>活水工具費</td><td>A/B 測試、精準投放等工具消耗</td><td>15%</td></tr>
+              <tr><td>過期銷毀</td><td>鑄造日起 365 天未使用自動銷毀</td><td>20%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Economic Cycle -->
+    <section class="section" id="token-cycle">
+      <div class="section-inner">
+        <span class="section-label fade-in">// ECONOMIC FLYWHEEL</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          經濟<span class="accent-primary">飛輪效應</span>
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <div class="flywheel-diagram fade-in fade-in-delay-2">更多使用者參與
+    ↓
+更多行為數據 → 數位孿生更精準
+    ↓
+行為洞察更有價值 → 活水夥伴 ROI 提升
+    ↓
+更多活水夥伴加入 → 更多任務 + 獎勵
+    ↓
+使用者體驗更豐富 → 留存率提升
+    ↓
+  ↻ 回到起點</div>
+
+        <h3 class="fade-in" style="margin-top:2.5rem; font-size:1.1rem;">價值流入來源</h3>
+        <div class="token-table-wrapper fade-in">
+          <table class="token-table">
+            <thead>
+              <tr><th>來源</th><th>形式</th><th>預估佔比</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>活水夥伴獎勵承諾金</td><td>法幣或等值商品/服務</td><td>40%</td></tr>
+              <tr><td>健保 P4P 分潤</td><td>行為處方箋改善績效獎勵</td><td>25%</td></tr>
+              <tr><td>行為數據授權收入</td><td>匿名聚合行為數據付費</td><td>20%</td></tr>
+              <tr><td>公部門專案補助</td><td>衛福部健康促進計畫</td><td>10%</td></tr>
+              <tr><td>Google.org 基金</td><td>初期啟動資金</td><td>5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="fade-in" style="margin-top:2.5rem; font-size:1.1rem;">關鍵經濟參數</h3>
+        <div class="token-table-wrapper fade-in">
+          <table class="token-table">
+            <thead>
+              <tr><th>參數</th><th>初始值</th><th>調整機制</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>hEXP → hMile 轉換率</td><td>100:1</td><td>動態（±20%）</td></tr>
+              <tr><td>每月轉換上限</td><td>50 hMile</td><td>季度檢討</td></tr>
+              <tr><td>過期天數</td><td>365 天</td><td>年度檢討</td></tr>
+              <tr><td>系統鑄造上限</td><td>月流通量 10%</td><td>DAO 投票</td></tr>
+              <tr><td>衰減寬限期</td><td>7 天</td><td>半年度檢討</td></tr>
+              <tr><td>通膨警戒線</td><td>月增 > 20%</td><td>自動觸發</td></tr>
+              <tr><td>通縮警戒線</td><td>月減 > 15%</td><td>自動觸發</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Simulation -->
+    <section class="section section-alt" id="token-simulation">
+      <div class="section-inner">
+        <span class="section-label fade-in">// SIMULATION</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          模擬<span class="accent-amber">情境</span>
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <div class="scenario-card fade-in fade-in-delay-2">
+          <h4>🧑‍🦳 情境一：糖尿病病人小陳的一個月</h4>
+          <div class="scenario-persona">58 歲，二型糖尿病，醫師開立行為處方箋</div>
+          <div class="scenario-body">
+            <p>小陳每天步行達標、每週社區太極拳、持續飲食紀錄。第二週完成活水夥伴「買菜走路挑戰」。連續天數加成從 ×1.0 升至 ×1.2，行為多樣性加成 ×1.3。</p>
+            <p style="margin-top:0.5rem;">月累計約 <strong>1,000 hEXP</strong>，達到 Lv.2 解鎖 hMile 轉換。因行為處方箋按時完成獲 ×1.5 加成。</p>
+          </div>
+          <div class="scenario-results">
+            <div class="scenario-result-item"><div class="result-value">1,000</div><div class="result-label">月累計 hEXP</div></div>
+            <div class="scenario-result-item"><div class="result-value">7.5</div><div class="result-label">轉換 hMile</div></div>
+            <div class="scenario-result-item"><div class="result-value">Lv.2</div><div class="result-label">達成等級</div></div>
+            <div class="scenario-result-item"><div class="result-value">血糖試紙</div><div class="result-label">兌換項目</div></div>
+          </div>
+        </div>
+
+        <div class="scenario-card fade-in fade-in-delay-3">
+          <h4>🎨 情境二：插畫家阿雅成為活水夥伴</h4>
+          <div class="scenario-persona">32 歲，自由插畫家，種子夥伴級</div>
+          <div class="scenario-body">
+            <p>阿雅設計「畫出你的健康一天」任務——使用者拍下健康行為照片，她為最佳作品繪製插畫。每位完成者獲 15 hEXP + 3 hMile。</p>
+          </div>
+          <div class="scenario-results">
+            <div class="scenario-result-item"><div class="result-value">100 人</div><div class="result-label">任務完成</div></div>
+            <div class="scenario-result-item"><div class="result-value">30</div><div class="result-label">hMile 分潤</div></div>
+            <div class="scenario-result-item"><div class="result-value">100 份</div><div class="result-label">行為洞察</div></div>
+            <div class="scenario-result-item"><div class="result-value">+50</div><div class="result-label">信譽積分</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; 2026 <a href="https://soking.cc">Soking</a> — Project SYNC Tokenomics</p>
+    </footer>
+  </div><!-- END page-tokenomics -->
+
+  <!-- ========== PAGE: PARTNERS ========== -->
+  <div class="page-container" id="page-partners">
+
+    <!-- Partners Hero -->
+    <section class="section token-page-hero" id="partner-hero" style="background: linear-gradient(135deg, rgba(255,159,28,0.04), rgba(0,87,255,0.04));">
+      <div class="section-inner" style="text-align:center;">
+        <div class="hero-badge fade-in" style="border-color:var(--amber); color:var(--amber); background:var(--amber-bg);">Vitality Partners Program</div>
+        <h1 class="hero-title fade-in fade-in-delay-1">
+          <span class="accent-amber">活水夥伴</span>
+          <span style="font-size:0.45em; font-weight:400; color:var(--text-secondary); margin-top:0.5rem; display:block;">
+            讓健康經濟流動起來
+          </span>
+        </h1>
+        <p class="hero-tagline fade-in fade-in-delay-2">
+          不只是廣告投放，而是<br>「經行為驗證的精準受眾觸及」
+        </p>
+        <div class="section-divider center fade-in fade-in-delay-3" style="background:linear-gradient(90deg, var(--amber), var(--teal));"></div>
+      </div>
+    </section>
+
+    <!-- What is Vitality Partner -->
+    <section class="section section-alt" id="partner-what">
+      <div class="section-inner">
+        <span class="section-label fade-in">// WHAT IS A VITALITY PARTNER</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          活水夥伴的<span class="accent-amber">經濟角色</span>
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <p class="narrative-text fade-in fade-in-delay-2">
+          在 Project SYNC 生態系中，活水夥伴不是傳統的廣告主，而是<strong>行為經濟的流動性提供者</strong>。他們投入任務設計與獎勵承諾，換取經行為驗證的精準受眾觸及、匿名聚合行為洞察、以及生態系信譽。
+        </p>
+
+        <div class="mechanism-grid fade-in fade-in-delay-3">
+          <div class="mechanism-card">
+            <h4>💰 投入端</h4>
+            <ul class="coin-detail-list">
+              <li>任務設計時間成本</li>
+              <li>獎勵承諾金（hMile 注入擔保）</li>
+              <li>平台工具訂閱費</li>
+            </ul>
+          </div>
+          <div class="mechanism-card">
+            <h4>📊 產出端</h4>
+            <ul class="coin-detail-list">
+              <li>經行為驗證的精準受眾</li>
+              <li>匿名聚合行為洞察報告</li>
+              <li>hMile 分潤</li>
+              <li>生態系信譽積分</li>
+              <li>社會影響力報告（NPO 專用）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partner Tiers -->
+    <section class="section" id="partner-tiers">
+      <div class="section-inner">
+        <span class="section-label fade-in">// PARTNER TIERS</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          夥伴<span class="accent-primary">分級制度</span>
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <div class="partner-tier-grid fade-in fade-in-delay-2">
+          <div class="partner-tier-card">
+            <div class="tier-name accent-teal">🌱 種子夥伴</div>
+            <div class="tier-quota">≤ 500 hMile/月</div>
+            <div class="tier-fee accent-teal">0%</div>
+            <div class="tier-fee-label">平台抽成（免費期）</div>
+            <ul class="tier-features">
+              <li>基礎報告</li>
+              <li>基礎任務編輯器</li>
+              <li>適合個人創作者、小商家</li>
+            </ul>
+          </div>
+          <div class="partner-tier-card">
+            <div class="tier-name accent-primary">🌿 成長夥伴</div>
+            <div class="tier-quota">501-5,000 hMile/月</div>
+            <div class="tier-fee accent-primary">8%</div>
+            <div class="tier-fee-label">平台抽成</div>
+            <ul class="tier-features">
+              <li>標準洞察報告</li>
+              <li>A/B 測試功能</li>
+              <li>排程投放</li>
+              <li>適合中小企業</li>
+            </ul>
+          </div>
+          <div class="partner-tier-card">
+            <div class="tier-name accent-violet">🌳 策略夥伴</div>
+            <div class="tier-quota">5,001-50,000 hMile/月</div>
+            <div class="tier-fee accent-violet">12%</div>
+            <div class="tier-fee-label">平台抽成</div>
+            <ul class="tier-features">
+              <li>深度報告 + 客製分析</li>
+              <li>全工具 + API 接入</li>
+              <li>適合大型企業</li>
+            </ul>
+          </div>
+          <div class="partner-tier-card">
+            <div class="tier-name accent-amber">🏔️ 生態夥伴</div>
+            <div class="tier-quota">> 50,000 hMile/月</div>
+            <div class="tier-fee accent-amber">15%</div>
+            <div class="tier-fee-label">平台抽成</div>
+            <ul class="tier-features">
+              <li>即時數據面板</li>
+              <li>全工具 + 白牌方案</li>
+              <li>適合企業集團、連鎖品牌</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative-text fade-in fade-in-delay-3" style="margin-top:2rem;">
+          <p><strong>抽成去向：</strong>40% 使用者獎勵補貼 → 30% 平台營運 → 20% 生態發展基金（NPO 補貼）→ 10% 治理儲備金</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Behavioral Spread Model -->
+    <section class="section section-alt" id="partner-spread">
+      <div class="section-inner">
+        <span class="section-label fade-in">// BEHAVIORAL SPREAD MODEL</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          行為<span class="accent-coral">價差模型</span>
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <p class="narrative-text fade-in fade-in-delay-2">
+          活水夥伴的核心獲利來自「行為價差」——投入成本與獲得的精準行銷價值之間的差額。
+        </p>
+
+        <div class="formula-block fade-in fade-in-delay-2" style="margin-top:2rem;">行為價差 = 精準觸及價值 - 獎勵投入成本 - 平台費用
+
+其中：
+  精準觸及價值 = 觸及人數 × 行為驗證溢價 × 轉換率
+  行為驗證溢價 = 1.5x - 3x（相對於一般數位廣告）</div>
+
+        <div class="scenario-card fade-in fade-in-delay-3" style="margin-top:2rem;">
+          <h4>📐 案例計算：某運動品牌「公園晨跑挑戰」</h4>
+          <div class="scenario-body">
+            <p>獎勵投入 1,000 hMile ≈ <strong>NT$3,000</strong>，平台費用 NT$360（12%），200 人完成任務。</p>
+            <p style="margin-top:0.5rem;">每人觸及成本僅 NT$16.8，但這 200 人都是「有穿戴裝置、持續運動 30 天以上、行為處方箋已完成」的高度活躍者。等效精準投放 CPM：NT$50-80。</p>
+          </div>
+          <div class="scenario-results">
+            <div class="scenario-result-item"><div class="result-value">NT$3,360</div><div class="result-label">總投入成本</div></div>
+            <div class="scenario-result-item"><div class="result-value">200 人</div><div class="result-label">完成任務</div></div>
+            <div class="scenario-result-item"><div class="result-value">NT$16.8</div><div class="result-label">每人成本</div></div>
+            <div class="scenario-result-item"><div class="result-value">3x</div><div class="result-label">行為驗證溢價</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NPO -->
+    <section class="section" id="partner-npo">
+      <div class="section-inner">
+        <span class="section-label fade-in">// NPO SUPPORT</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          <span class="accent-teal">NPO</span> 專屬機制
+        </h2>
+        <div class="section-divider fade-in fade-in-delay-1"></div>
+
+        <div class="npo-callout fade-in fade-in-delay-2">
+          <h4>💚 非營利組織永久免費</h4>
+          <p>非營利組織通常沒有商業預算，因此享有特殊支持機制。</p>
+          <ul>
+            <li>平台費用全免（永久 0% 抽成）</li>
+            <li>生態發展基金補貼最高每月 2,000 hMile</li>
+            <li>社會影響力報告（對外募款與政策倡議用）</li>
+            <li>優先匹配公部門專案資源</li>
+          </ul>
+        </div>
+
+        <h3 class="fade-in" style="margin-top:2.5rem; font-size:1.1rem;">NPO 的非貨幣價值投入</h3>
+        <div class="mechanism-grid fade-in">
+          <div class="mechanism-card">
+            <h4>🤝 社區網路連結</h4>
+            <p>帶入原本接觸不到的弱勢族群，擴展生態系服務範圍。</p>
+          </div>
+          <div class="mechanism-card">
+            <h4>🙋 志工人力</h4>
+            <p>協助線下任務驗證與陪伴，讓數位系統有溫度。</p>
+          </div>
+          <div class="mechanism-card">
+            <h4>📚 專業知識</h4>
+            <p>疾病衛教、照護技巧，為系統提供專業內容。</p>
+          </div>
+          <div class="mechanism-card">
+            <h4>🏛️ 信任背書</h4>
+            <p>長者更願意參與有熟悉 NPO 背書的活動。</p>
+          </div>
+        </div>
+
+        <div class="scenario-card fade-in" style="margin-top:2rem;">
+          <h4>🏥 案例：台灣糖尿病衛教學會</h4>
+          <div class="scenario-persona">NPO 活水夥伴，設計「糖友共餐會」每月任務</div>
+          <div class="scenario-body">
+            <p>完成條件：到場簽到 + 餐後血糖紀錄分享。每位完成者獲 30 hEXP + 5 hMile。</p>
+            <p style="margin-top:0.5rem;">協會獲得參與數據（申請政府補助實證）、社會影響力報告（向捐款人交代成效）、P4P 數據連結（參與者回診指標改善可追溯至此活動）。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA for Partners -->
+    <section class="section section-alt" id="partner-cta">
+      <div class="section-inner" style="text-align:center;">
+        <span class="section-label fade-in">// BECOME A PARTNER</span>
+        <h2 class="section-title fade-in fade-in-delay-1">
+          成為<span class="accent-amber">活水夥伴</span>
+        </h2>
+        <div class="section-divider center fade-in fade-in-delay-1"></div>
+        <p class="section-subtitle fade-in fade-in-delay-2" style="margin:0 auto; text-align:center;">
+          無論你是商家、創作者、還是非營利組織，<br>
+          都能在 Project SYNC 生態系中找到共創健康經濟的角色。
+        </p>
+        <div class="cta-buttons fade-in fade-in-delay-3">
+          <a href="mailto:soking@soking.cc?subject=活水夥伴申請" class="cta-btn cta-btn-primary">
+            申請加入
+          </a>
+          <a href="#" class="cta-btn cta-btn-secondary" onclick="switchTab('overview'); return false;">
+            回到計畫總覽
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; 2026 <a href="https://soking.cc">Soking</a> — Project SYNC Vitality Partners</p>
+    </footer>
+  </div><!-- END page-partners -->
+
+  <!-- ============================================ -->
+  <!-- SCRIPTS                                     -->
+  <!-- ============================================ -->
+  <script>
+    // ===== ECOSYSTEM DATA =====
+    const ecosystemData = {
+      nodes: [
+        {
+          id: 'patient',
+          label: '病人 / 使用者',
+          icon: '🧑‍🦰',
+          description: '生態系的核心。透過穿戴裝置與行為日誌提供數據，接收個人化行為處方箋，在日常生活中執行健康行為。',
+          role: 'center',
+          color: '#7c5cfc',
+          size: 40,
+          flows: ['提供健康數據', '接收行為處方', '累積 hEXP/hMile', '參與社區活動']
+        },
+        {
+          id: 'hospital',
+          label: '醫療機構',
+          icon: '🏥',
+          description: '提供專業醫療診斷與處方建議。透過 SYNC 平台獲得病人離院後的持續行為數據，提升治療成效。',
+          role: 'medical',
+          color: '#00b4a0',
+          size: 32,
+          flows: ['醫療診斷', '處方建議', '獲得行為數據', '治療追蹤']
+        },
+        {
+          id: 'community',
+          label: '社區據點',
+          icon: '🏘️',
+          description: '社會處方箋的執行場域。包括社區關懷據點、里民活動中心、宗教場所。提供社交網絡與活動空間。',
+          role: 'community',
+          color: '#0057ff',
+          size: 32,
+          flows: ['活動場域', '社交網絡', '行為驗證', '在地連結']
+        },
+        {
+          id: 'partner',
+          label: '活水夥伴',
+          icon: '🤝',
+          description: '商業參與者。提供健康餐飲、運動場館、身心靈服務等。接受 hMile 兌換，獲得精準客流與健康品牌加值。',
+          role: 'business',
+          color: '#ff9f1c',
+          size: 32,
+          flows: ['健康商品/服務', 'hMile 兌換', '精準導流', '品牌加值']
+        },
+        {
+          id: 'vitality_org',
+          label: '賦能組織',
+          icon: '🌊',
+          description: '提供系統基礎建設的組織。包括政府機關（健保署）、研究機構、保險公司、科技平台。讓生態系有源源不絕的活水。',
+          role: 'enabler',
+          color: '#ff5c72',
+          size: 32,
+          flows: ['政策支持', '資金挹注', '技術平台', '數據治理']
+        }
+      ],
+      edges: [
+        { source: 'patient', target: 'hospital', type: 'data', label: '健康數據', color: '#00b4a0' },
+        { source: 'hospital', target: 'patient', type: 'service', label: '醫療處方', color: '#0057ff' },
+        { source: 'patient', target: 'community', type: 'energy', label: '社區參與', color: '#ff9f1c' },
+        { source: 'community', target: 'patient', type: 'service', label: '社交支持', color: '#0057ff' },
+        { source: 'patient', target: 'partner', type: 'reward', label: 'hMile 兌換', color: '#7c5cfc' },
+        { source: 'partner', target: 'patient', type: 'service', label: '健康服務', color: '#0057ff' },
+        { source: 'hospital', target: 'community', type: 'data', label: '社會處方箋', color: '#00b4a0' },
+        { source: 'vitality_org', target: 'hospital', type: 'energy', label: '政策/資金', color: '#ff9f1c' },
+        { source: 'vitality_org', target: 'community', type: 'energy', label: '基建支援', color: '#ff9f1c' },
+        { source: 'vitality_org', target: 'partner', type: 'energy', label: '商業賦能', color: '#ff9f1c' },
+        { source: 'partner', target: 'vitality_org', type: 'data', label: '成效數據', color: '#00b4a0' }
+      ]
+    };
+
+    // ===== D3 ECOSYSTEM GRAPH =====
+    function initEcosystemGraph() {
+      const container = document.getElementById('ecosystem-graph');
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const width = rect.width || 900;
+      const height = rect.height || (width * 10 / 16);
+
+      const svg = d3.select('#ecosystem-graph')
+        .append('svg')
+        .attr('viewBox', `0 0 ${width} ${height}`)
+        .attr('preserveAspectRatio', 'xMidYMid meet');
+
+      const defs = svg.append('defs');
+
+      // Soft shadow filter
+      const filter = defs.append('filter').attr('id', 'softShadow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+      filter.append('feDropShadow').attr('dx', '0').attr('dy', '2').attr('stdDeviation', '4').attr('flood-opacity', '0.15');
+
+      // Arrow markers
+      ecosystemData.edges.forEach((e, i) => {
+        defs.append('marker')
+          .attr('id', `arrow-${i}`)
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', 36)
+          .attr('refY', 0)
+          .attr('markerWidth', 6)
+          .attr('markerHeight', 6)
+          .attr('orient', 'auto')
+          .append('path')
+          .attr('d', 'M0,-5L10,0L0,5')
+          .attr('fill', e.color)
+          .attr('opacity', 0.5);
+      });
+
+      // Set initial positions
+      const cx = width / 2;
+      const cy = height / 2;
+      const radius = Math.min(width, height) * 0.32;
+      const outerNodes = ecosystemData.nodes.filter(n => n.role !== 'center');
+      outerNodes.forEach((n, i) => {
+        const angle = (i / outerNodes.length) * Math.PI * 2 - Math.PI / 2;
+        n.x = cx + Math.cos(angle) * radius;
+        n.y = cy + Math.sin(angle) * radius;
+      });
+      const centerNode = ecosystemData.nodes.find(n => n.role === 'center');
+      if (centerNode) { centerNode.x = cx; centerNode.y = cy; }
+
+      // Simulation
+      const simulation = d3.forceSimulation(ecosystemData.nodes)
+        .force('link', d3.forceLink(ecosystemData.edges).id(d => d.id).distance(radius * 0.85))
+        .force('charge', d3.forceManyBody().strength(-400))
+        .force('center', d3.forceCenter(cx, cy))
+        .force('collision', d3.forceCollide().radius(d => d.size + 20))
+        .alphaDecay(0.03);
+
+      // Draw edges
+      const edgeGroup = svg.append('g').attr('class', 'edges');
+      const links = edgeGroup.selectAll('line')
+        .data(ecosystemData.edges)
+        .join('line')
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-opacity', 0.25)
+        .attr('marker-end', (d, i) => `url(#arrow-${i})`);
+
+      // Edge labels
+      const edgeLabels = svg.append('g').attr('class', 'edge-labels')
+        .selectAll('text')
+        .data(ecosystemData.edges)
+        .join('text')
+        .text(d => d.label)
+        .attr('fill', d => d.color)
+        .attr('font-size', '10px')
+        .attr('font-weight', '600')
+        .attr('text-anchor', 'middle')
+        .attr('opacity', 0)
+        .attr('dy', -6);
+
+      // Draw nodes
+      const nodeGroup = svg.append('g').attr('class', 'nodes');
+      const nodes = nodeGroup.selectAll('g')
+        .data(ecosystemData.nodes)
+        .join('g')
+        .style('cursor', 'pointer')
+        .call(d3.drag()
+          .on('start', dragStarted)
+          .on('drag', dragged)
+          .on('end', dragEnded));
+
+      // Node circles
+      nodes.append('circle')
+        .attr('r', d => d.size)
+        .attr('fill', '#ffffff')
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', 2.5)
+        .attr('filter', 'url(#softShadow)');
+
+      // Node icons
+      nodes.append('text')
+        .text(d => d.icon)
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'central')
+        .attr('font-size', d => d.size * 0.7 + 'px')
+        .style('pointer-events', 'none');
+
+      // Node labels
+      nodes.append('text')
+        .text(d => d.label)
+        .attr('text-anchor', 'middle')
+        .attr('dy', d => d.size + 18)
+        .attr('fill', '#1a1a2e')
+        .attr('font-size', '12px')
+        .attr('font-weight', '600')
+        .style('pointer-events', 'none');
+
+      // Hover interactions
+      nodes.on('mouseover', function(event, d) {
+        d3.select(this).select('circle')
+          .transition().duration(200)
+          .attr('r', d.size * 1.15)
+          .attr('stroke-width', 3.5);
+
+        links.transition().duration(200)
+          .attr('stroke-opacity', e => (e.source.id === d.id || e.target.id === d.id) ? 0.7 : 0.08)
+          .attr('stroke-width', e => (e.source.id === d.id || e.target.id === d.id) ? 2.5 : 1);
+
+        edgeLabels.transition().duration(200)
+          .attr('opacity', e => (e.source.id === d.id || e.target.id === d.id) ? 1 : 0);
+
+        showTooltip(d, event);
+      })
+      .on('mousemove', function(event) { moveTooltip(event); })
+      .on('mouseout', function(event, d) {
+        d3.select(this).select('circle')
+          .transition().duration(200)
+          .attr('r', d.size)
+          .attr('stroke-width', 2.5);
+
+        links.transition().duration(200)
+          .attr('stroke-opacity', 0.25)
+          .attr('stroke-width', 1.5);
+
+        edgeLabels.transition().duration(200)
+          .attr('opacity', 0);
+
+        hideTooltip();
+      });
+
+      // Simulation tick
+      simulation.on('tick', () => {
+        links
+          .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+        edgeLabels
+          .attr('x', d => (d.source.x + d.target.x) / 2)
+          .attr('y', d => (d.source.y + d.target.y) / 2);
+        nodes.attr('transform', d => `translate(${d.x},${d.y})`);
+      });
+
+      function dragStarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x; d.fy = d.y;
+      }
+      function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+      function dragEnded(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null; d.fy = null;
+      }
+    }
+
+    // ===== TOOLTIP =====
+    function showTooltip(d, event) {
+      const tooltip = document.getElementById('nodeTooltip');
+      document.getElementById('tooltipTitle').innerHTML = d.icon + ' ' + d.label;
+      document.getElementById('tooltipTitle').style.color = d.color;
+      document.getElementById('tooltipDesc').textContent = d.description;
+      document.getElementById('tooltipFlows').innerHTML = d.flows.map(f => `<span>${f}</span>`).join('');
+      tooltip.style.borderColor = d.color;
+      tooltip.classList.add('visible');
+      moveTooltip(event);
+    }
+
+    function moveTooltip(event) {
+      const tooltip = document.getElementById('nodeTooltip');
+      let x = event.clientX + 15;
+      let y = event.clientY + 15;
+      if (x + 320 > window.innerWidth) x = event.clientX - 335;
+      if (y + tooltip.offsetHeight > window.innerHeight) y = window.innerHeight - tooltip.offsetHeight - 10;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+    }
+
+    function hideTooltip() {
+      document.getElementById('nodeTooltip').classList.remove('visible');
+    }
+
+    // ===== TIMELINE TOGGLE =====
+    function togglePhase(el) { el.classList.toggle('expanded'); }
+
+    // ===== SCROLL ANIMATIONS =====
+    function initScrollAnimations() {
+      const elements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+      elements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          el.classList.add('visible');
+        } else {
+          observer.observe(el);
+        }
+      });
+    }
+
+    // ===== NAV DOTS =====
+    function initNavDots() {
+      const dots = document.querySelectorAll('.nav-dot');
+      const sections = Array.from(dots).map(dot => document.getElementById(dot.dataset.target));
+
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          const target = document.getElementById(dot.dataset.target);
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            dots.forEach(d => d.classList.toggle('active', d.dataset.target === id));
+          }
+        });
+      }, { threshold: 0.3 });
+
+      sections.forEach(section => { if (section) observer.observe(section); });
+    }
+
+    // ===== TAB SWITCHING =====
+    function switchTab(pageName) {
+      // Update tabs
+      document.querySelectorAll('.header-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.page === pageName);
+      });
+
+      // Update pages
+      document.querySelectorAll('.page-container').forEach(page => {
+        page.classList.toggle('active', page.id === 'page-' + pageName);
+      });
+
+      // Scroll to top
+      window.scrollTo(0, 0);
+
+      // Show/hide nav dots (only on overview)
+      const navDots = document.getElementById('navDots');
+      if (navDots) navDots.style.display = pageName === 'overview' ? '' : 'none';
+
+      // Re-init scroll animations for new page
+      setTimeout(initScrollAnimations, 100);
+    }
+
+    function initTabs() {
+      document.querySelectorAll('.header-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchTab(tab.dataset.page));
+      });
+    }
+
+    // ===== HEADER SCROLL EFFECT =====
+    function initHeaderScroll() {
+      const header = document.getElementById('siteHeader');
+      window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 10);
+      }, { passive: true });
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      initEcosystemGraph();
+      initScrollAnimations();
+      initNavDots();
+      initTabs();
+      initHeaderScroll();
+    });
+  </script>
+</body>
+</html>
